@@ -22,7 +22,7 @@ export const NIVEL_OPTIONS: string[] = [
 ];
 
 export const TEORIA_SUB_LABELS: string[] = [
-  'Geral', 'Infantil', 'Inicial', 'AvanÃ§ado', 'IntermediÃ¡rio',
+  'Geral', 'Infantil', 'Inicial', 'Avançado', 'Intermediário',
 ];
 
 export const INSTRUMENT_LIST: string[] = [
@@ -49,7 +49,7 @@ export const METAIS_INSTRUMENTS  = new Set([
 ]);
 
 export function canEnroll(instrument: string, classType: ClassType): boolean {
-  if (['Teoria e Solfejo','MusicalizaÃ§Ã£o','Personalizado'].includes(classType)) return true;
+  if (['Teoria e Solfejo','Musicalização','Personalizado'].includes(classType)) return true;
   if (instrument === 'A DEFINIR') return true;
   if (classType === 'Madeiras') return MADEIRAS_INSTRUMENTS.has(instrument);
   if (classType === 'Cordas')   return CORDAS_INSTRUMENTS.has(instrument);
@@ -75,11 +75,11 @@ function engineForType(type: ClassType): string {
   return 'generic';
 }
 function allowGroupForType(type: ClassType): boolean {
-  return ['Teoria e Solfejo','MusicalizaÃ§Ã£o','Personalizado'].includes(type);
+  return ['Teoria e Solfejo','Musicalização','Personalizado'].includes(type);
 }
 function iconForType(type: ClassType): string {
   return ({ 'Cordas':'violin-treble','Madeiras':'clarinet','Metais':'trumpet',
-    'Teoria e Solfejo':'metronome','MusicalizaÃ§Ã£o':'recorder','Personalizado':'orchestra' } as Record<string,string>)[type] ?? 'orchestra';
+    'Teoria e Solfejo':'metronome','Musicalização':'recorder','Personalizado':'orchestra' } as Record<string,string>)[type] ?? 'orchestra';
 }
 
 // â”€â”€â”€ Student data â€” starts empty; populate via Gerenciamento â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -87,14 +87,14 @@ const DEFAULT_STUDENTS: StudentData[] = [];
 
 // â”€â”€â”€ Real turma data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const REAL_TURMAS: TurmaData[] = [
-  { id:'musicalizacao',    description:'TURMA 01 - MUSICALIZAÃ‡ÃƒO',  type:'MusicalizaÃ§Ã£o',    instrument:'', active:true, engineType:'generic',         allowGroup:true,  icon:'recorder'     },
+  { id:'musicalizacao',    description:'TURMA 01 - MUSICALIZAÇÃO',  type:'Musicalização',    instrument:'', active:true, engineType:'generic',         allowGroup:true,  icon:'recorder'     },
   { id:'teoria-01',        description:'(GERAL) - TURMA 01 - TEORIA E SOLFEJO MSA', type:'Teoria e Solfejo', instrument:'', active:true, engineType:'teoria',           allowGroup:true,  icon:'metronome'    },
   { id:'cordas-01',        description:'TURMA 01 - CORDAS',   type:'Cordas',  instrument:'VIOLINO',  active:true, engineType:'cordas',          allowGroup:false, icon:'violin-treble' },
   { id:'cordas-02',        description:'TURMA 02 - CORDAS',   type:'Cordas',  instrument:'VIOLA',    active:true, engineType:'cordas',          allowGroup:false, icon:'violin-alto'   },
   { id:'madeiras-01',      description:'TURMA 01 - MADEIRAS', type:'Madeiras', instrument:'CLARINETE', active:true, engineType:'metais-madeiras', allowGroup:false, icon:'clarinet'     },
   { id:'metais-01',        description:'TURMA 01 - METAIS',   type:'Metais',  instrument:'TROMPETE', active:true, engineType:'metais-madeiras', allowGroup:false, icon:'trumpet'       },
   { id:'metais-02',        description:'TURMA 02 - METAIS',   type:'Metais',  instrument:'EUPHONIUM',active:true, engineType:'metais-madeiras', allowGroup:false, icon:'euphonium'     },
-  { id:'pratica-conjunto', description:'PRÃTICA EM CONJUNTO',  type:'MusicalizaÃ§Ã£o',    instrument:'', active:true, engineType:'generic',         allowGroup:true,  icon:'orchestra'    },
+  { id:'pratica-conjunto', description:'PRÁTICA EM CONJUNTO',  type:'Musicalização',    instrument:'', active:true, engineType:'generic',         allowGroup:true,  icon:'orchestra'    },
   { id:'personalizado',    description:'PERSONALIZADO',         type:'Personalizado',    instrument:'', active:true, engineType:'personalizado',   allowGroup:false, icon:'orchestra'    },
 ];
 
@@ -128,13 +128,13 @@ export class DataService {
     this.activeTurmas   = computed(() => this._turmas().filter(t => t.active));
   }
 
-  // â”€â”€â”€ MigraÃ§Ã£o: corrige dados antigos sem campo 'type' ou sem instrumento na descriÃ§Ã£o â”€â”€
+  // â”€â”€â”€ Migração: corrige dados antigos sem campo 'type' ou sem instrumento na descrição â”€â”€
   private migrateTurmas(turmas: TurmaData[]): TurmaData[] {
     let changed = false;
     const migrated = turmas.map(t => {
       let u = { ...t };
 
-      // 1) Derivar 'type' se estiver faltando (dados de versÃ£o anterior)
+      // 1) Derivar 'type' se estiver faltando (dados de versão anterior)
       if (!u.type) {
         changed = true;
         if (u.engineType === 'cordas')           u.type = 'Cordas';
@@ -143,10 +143,10 @@ export class DataService {
           u.type = MADEIRAS_INSTRUMENTS.has(inst) ? 'Madeiras' : 'Metais';
         }
         else if (u.engineType === 'teoria')      u.type = 'Teoria e Solfejo';
-        else                                     u.type = 'MusicalizaÃ§Ã£o';
+        else                                     u.type = 'Musicalização';
       }
 
-      // 2) Remover instrumento da descriÃ§Ã£o se estiver presente (era redundante)
+      // 2) Remover instrumento da descrição se estiver presente (era redundante)
       if (u.instrument && u.description.toUpperCase().endsWith(` - ${u.instrument.toUpperCase()}`)) {
         changed = true;
         u.description = u.description.slice(0, -(` - ${u.instrument}`).length);

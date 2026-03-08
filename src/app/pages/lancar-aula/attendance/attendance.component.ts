@@ -9,7 +9,7 @@ import { AttendanceToggleComponent } from '../../../components/attendance-toggle
 import { LessonService } from '../../../services/lesson.service';
 import { AttendanceMap, ClassInfo } from '../../../models/lesson.model';
 
-const DAY_NAMES = ['Domingo', 'Segunda-feira', 'TerÃ§a-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'SÃ¡bado'];
+const DAY_NAMES = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
 
 @Component({
   selector: 'app-attendance',
@@ -69,10 +69,10 @@ const DAY_NAMES = ['Domingo', 'Segunda-feira', 'TerÃ§a-feira', 'Quarta-feira',
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>
                 </svg>
-                <span class="font-chalk" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">AtenÃ§Ã£o</span>
+                <span class="font-chalk" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Atenção</span>
               </div>
               <p class="font-chalk" style="font-size: 1rem; color: var(--foreground); line-height: 1.5;">
-                VocÃª selecionou <strong>{{ pendingDayName }}</strong>. Habitualmente as aulas ocorrem aos sÃ¡bados. Deseja continuar?
+                Você selecionou <strong>{{ pendingDayName }}</strong>. Habitualmente as aulas ocorrem aos sábados. Deseja continuar?
               </p>
               <div style="display: flex; gap: 0.75rem;">
                 <button type="button" (click)="cancelDateModal()"
@@ -105,7 +105,7 @@ const DAY_NAMES = ['Domingo', 'Segunda-feira', 'TerÃ§a-feira', 'Quarta-feira',
               </span>
             </div>
             <span class="font-chalk" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-foreground);">
-              PresenÃ§a
+              Presença
             </span>
           </div>
 
@@ -224,11 +224,11 @@ const DAY_NAMES = ['Domingo', 'Segunda-feira', 'TerÃ§a-feira', 'Quarta-feira',
             }
           </div>
 
-          <!-- Ata obrigatÃ³ria quando todos ausentes (apenas turmas normais) -->
+          <!-- Ata obrigatória quando todos ausentes (apenas turmas normais) -->
           @if (!isPersonalizado && allMarked && presentCount === 0) {
             <div style="margin-bottom: 0.75rem; border: 2px dashed rgba(230,160,50,0.5); border-radius: var(--radius-xl); background: rgba(230,160,50,0.06); padding: 0.75rem;">
               <p class="font-chalk" style="font-size: 0.8rem; color: rgb(230,160,50); margin-bottom: 0.5rem; font-weight: 700;">
-                âš  NÃ£o hÃ¡ nenhum aluno marcado como presente â€” registre a Ata de aula
+                âš  Não há nenhum aluno marcado como presente â€” registre a Ata de aula
               </p>
               <textarea [(ngModel)]="ataAusencia" rows="3" placeholder="Descreva o motivo / registre a ata desta aula sem presentes..." class="font-chalk"
                 style="width:100%;padding:0.5rem 0.75rem;border:1px solid rgba(230,160,50,0.4);border-radius:var(--radius-md);background:var(--background);color:var(--foreground);font-size:0.85rem;outline:none;resize:vertical;box-sizing:border-box;">
@@ -242,7 +242,7 @@ const DAY_NAMES = ['Domingo', 'Segunda-feira', 'TerÃ§a-feira', 'Quarta-feira',
             [disabled]="!canAdvance"
             (click)="advance()"
           >
-            AVANÃ‡AR
+            AVANÇAR
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="m9 18 6-6-6-6"/>
             </svg>
@@ -255,7 +255,7 @@ const DAY_NAMES = ['Domingo', 'Segunda-feira', 'TerÃ§a-feira', 'Quarta-feira',
               } @else if (isPersonalizado && presentCount === 0) {
                 Selecione ao menos um aluno presente para continuar
               } @else if (pendingCount > 0) {
-                Marque a presenÃ§a de todos os alunos ({{ pendingCount }} pendente{{ pendingCount !== 1 ? 's' : '' }})
+                Marque a presença de todos os alunos ({{ pendingCount }} pendente{{ pendingCount !== 1 ? 's' : '' }})
               } @else if (presentCount === 0 && !ataAusencia.trim()) {
                 Registre a Ata para prosseguir sem presentes
               }
@@ -316,7 +316,7 @@ export class AttendanceComponent implements OnInit {
 
   get canAdvance(): boolean {
     if (!this.selectedDate) return false;
-    // Personalizado: basta ter pelo menos 1 presente (nÃ£o precisa marcar todos)
+    // Personalizado: basta ter pelo menos 1 presente (não precisa marcar todos)
     if (this.isPersonalizado) return this.presentCount > 0;
     // Demais turmas: todos devem ser marcados
     if (!this.allMarked) return false;
@@ -354,7 +354,7 @@ export class AttendanceComponent implements OnInit {
     }
 
     // Restore draft state from localStorage
-    // Filtra apenas alunos que ainda estÃ£o na turma para evitar pendentes negativos
+    // Filtra apenas alunos que ainda estão na turma para evitar pendentes negativos
     const rawDraft = this.lessonService.getDraftAttendance(this.turmaId);
     const filteredDraft: typeof rawDraft = {};
     for (const s of this.students) {
@@ -371,7 +371,7 @@ export class AttendanceComponent implements OnInit {
   togglePresent(student: string): void {
     const current = this.attendance[student] === true;
     const updated = { ...this.attendance, [student]: !current };
-    // Se deselecionar (false), remove da attendance para nÃ£o contar como marcado
+    // Se deselecionar (false), remove da attendance para não contar como marcado
     if (current) {
       const { [student]: _, ...rest } = updated;
       this.attendance = rest;
@@ -397,7 +397,7 @@ export class AttendanceComponent implements OnInit {
 
     const [y, m, d] = value.split('-');
     const date = new Date(+y, +m - 1, +d);
-    const dayOfWeek = date.getDay(); // 0=Dom, 6=SÃ¡b
+    const dayOfWeek = date.getDay(); // 0=Dom, 6=Sáb
 
     if (dayOfWeek !== 6) {
       this.pendingDate = value;
@@ -431,7 +431,7 @@ export class AttendanceComponent implements OnInit {
   advance(): void {
     if (!this.canAdvance) return;
 
-    // Para Personalizado: quem nÃ£o foi selecionado = falta
+    // Para Personalizado: quem não foi selecionado = falta
     let finalAttendance = this.attendance;
     if (this.isPersonalizado) {
       const full: AttendanceMap = {};
