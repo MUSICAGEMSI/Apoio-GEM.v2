@@ -1,0 +1,8 @@
+﻿node_modules/
+dist/
+.angular/
+.env
+*.log
+deploy.ps1
+_deploy_write.py
+deploy.bat
