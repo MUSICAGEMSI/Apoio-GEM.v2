@@ -33,7 +33,7 @@ import { TurmaData } from '../../../models/lesson.model';
 
         @if (allowedTurmas().length === 0) {
           <div style="padding: 2rem 1rem; text-align: center;">
-            <p class="font-chalk" style="font-size: 0.95rem; color: var(--muted-foreground);">Nenhuma turma ativa disponÃ­vel.</p>
+            <p class="font-chalk" style="font-size: 0.95rem; color: var(--muted-foreground);">Nenhuma turma ativa disponível.</p>
           </div>
         }
 
@@ -56,7 +56,7 @@ import { TurmaData } from '../../../models/lesson.model';
                   <div class="font-chalk" style="font-size: 0.7rem; margin-top: 0.5rem;"
                     [style.color]="isPersonalizado(t.id) ? 'rgb(100,180,100)' : getStudentCount(t.id) > 0 ? 'var(--muted-foreground)' : 'rgb(220,70,70)'">
                     @if (isPersonalizado(t.id)) {
-                      Aberta â€” todos os alunos do sistema
+                      Aberta  -  todos os alunos do sistema
                     } @else {
                       {{ getStudentCount(t.id) > 0 ? getStudentCount(t.id) + ' aluno(s)' : 'Sem alunos matriculados' }}
                     }
